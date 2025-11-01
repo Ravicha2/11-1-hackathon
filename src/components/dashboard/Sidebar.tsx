@@ -1,6 +1,6 @@
 'use client'
 
-import { currentUser, navigationItems, NavigationItem } from '@/lib/mockData'
+import { currentUser, NavigationItem, navigationItems } from '@/lib/mockData'
 import { cn } from '@/lib/utils'
 import {
   BookOpen,
@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const iconMap = {
   Home,
@@ -32,7 +32,7 @@ const iconMap = {
 
 export default function Sidebar() {
   const pathname = usePathname()
-  
+
   const isAnyChildActive = (item: NavigationItem): boolean => {
     if (!item.children) return false
     return item.children.some(child => pathname === child.href)

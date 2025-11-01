@@ -8,6 +8,33 @@ export interface User {
   joinDate: string
   isOnline: boolean
   lastCheckIn?: string
+  email?: string
+}
+
+export interface PatientRiskData {
+  patientId: string
+  patientName: string
+  email: string
+  injury: string
+  weeksInTherapy: number
+  data: {
+    hepComplianceLastWeek: string // 家庭作业完成率
+    loginsLastWeek: number // 上周登录次数
+    lastCommunityPost: string // 最后一次社区发帖时间
+    recentAppointments: {
+      lastMinuteCancellations: number
+      noShows: number
+    }
+    painScoreTrend: 'improving' | 'stagnant' | 'worsening' // 疼痛趋势
+    recentPostSentiment: string // 最近帖子情感分析
+    goalAchievementRate: string // 目标达成率
+  }
+}
+
+export interface RiskAnalysisResult {
+  riskScore: number
+  reasoning: string
+  recommendations: string[]
 }
 
 export interface Task {
@@ -102,7 +129,8 @@ export const currentUser: User = {
   injuryType: 'Knee Rehabilitation',
   joinDate: '2024-09-15',
   isOnline: true,
-  lastCheckIn: '2024-11-01T08:30:00Z'
+  lastCheckIn: '2024-11-01T08:30:00Z',
+  email: 'alex.chen@example.com'
 }
 
 // User's interest categories (for party filtering)
@@ -691,5 +719,237 @@ export const navigationItems: NavigationItem[] = [
     name: 'Calendar',
     href: '/dashboard/calendar',
     icon: 'Calendar'
+  }
+]
+
+// Mock patient risk data for AI analysis
+export const mockPatientRiskData: PatientRiskData[] = [
+  {
+    patientId: '1',
+    patientName: 'Alex Chen',
+    email: 'alex.chen@example.com',
+    injury: 'Knee Rehabilitation',
+    weeksInTherapy: 8,
+    data: {
+      hepComplianceLastWeek: '85%',
+      loginsLastWeek: 5,
+      lastCommunityPost: '2 days ago',
+      recentAppointments: {
+        lastMinuteCancellations: 0,
+        noShows: 0
+      },
+      painScoreTrend: 'improving',
+      recentPostSentiment: 'Positive. Recent post: "Feeling much better this week! The exercises are really helping."',
+      goalAchievementRate: '80%'
+    }
+  },
+  {
+    patientId: '2',
+    patientName: 'Sarah Johnson',
+    email: 'yangqx0925@163.com',
+    injury: 'Shoulder Rehabilitation',
+    weeksInTherapy: 6,
+    data: {
+      hepComplianceLastWeek: '35%',
+      loginsLastWeek: 1,
+      lastCommunityPost: '20 days ago',
+      recentAppointments: {
+        lastMinuteCancellations: 1,
+        noShows: 0
+      },
+      painScoreTrend: 'stagnant',
+      recentPostSentiment: 'Negative. Recent post: "Feeling like this week had no progress, shoulder is still the same, getting a bit discouraged."',
+      goalAchievementRate: '40%'
+    }
+  },
+  {
+    patientId: '3',
+    patientName: 'Mike Wilson',
+    email: 'mike.wilson@example.com',
+    injury: 'Spine Rehabilitation',
+    weeksInTherapy: 12,
+    data: {
+      hepComplianceLastWeek: '20%',
+      loginsLastWeek: 0,
+      lastCommunityPost: '35 days ago',
+      recentAppointments: {
+        lastMinuteCancellations: 2,
+        noShows: 1
+      },
+      painScoreTrend: 'worsening',
+      recentPostSentiment: 'Very negative. Recent post: "This is not working. Pain is getting worse and I am losing hope."',
+      goalAchievementRate: '15%'
+    }
+  },
+  {
+    patientId: '4',
+    patientName: 'Emma Davis',
+    email: 'emma.davis@example.com',
+    injury: 'Ankle Rehabilitation',
+    weeksInTherapy: 4,
+    data: {
+      hepComplianceLastWeek: '70%',
+      loginsLastWeek: 3,
+      lastCommunityPost: '5 days ago',
+      recentAppointments: {
+        lastMinuteCancellations: 0,
+        noShows: 0
+      },
+      painScoreTrend: 'improving',
+      recentPostSentiment: 'Neutral. Recent post: "Making steady progress, some days are better than others."',
+      goalAchievementRate: '65%'
+    }
+  },
+  {
+    patientId: '5',
+    patientName: 'Carlos Rodriguez',
+    email: 'carlos.r@example.com',
+    injury: 'ACL Tear Recovery',
+    weeksInTherapy: 8,
+    data: {
+      hepComplianceLastWeek: '45%',
+      loginsLastWeek: 2,
+      lastCommunityPost: '15 days ago',
+      recentAppointments: {
+        lastMinuteCancellations: 1,
+        noShows: 0
+      },
+      painScoreTrend: 'stagnant',
+      recentPostSentiment: 'Frustrated. Recent post: "Feeling overwhelmed with work and rehab. Hard to find time for exercises."',
+      goalAchievementRate: '50%'
+    }
+  },
+  {
+    patientId: '6',
+    patientName: 'Lisa Chen',
+    email: 'lisa.chen@example.com',
+    injury: 'Rotator Cuff Repair',
+    weeksInTherapy: 10,
+    data: {
+      hepComplianceLastWeek: '30%',
+      loginsLastWeek: 0,
+      lastCommunityPost: '28 days ago',
+      recentAppointments: {
+        lastMinuteCancellations: 0,
+        noShows: 2
+      },
+      painScoreTrend: 'worsening',
+      recentPostSentiment: 'Concerned. Recent post: "Not sure if the exercises are right for me. Shoulder feels more painful lately."',
+      goalAchievementRate: '35%'
+    }
+  },
+  {
+    patientId: '7',
+    patientName: 'Marcus Thompson',
+    email: 'marcus.t@example.com',
+    injury: 'Hip Replacement Recovery',
+    weeksInTherapy: 5,
+    data: {
+      hepComplianceLastWeek: '55%',
+      loginsLastWeek: 1,
+      lastCommunityPost: '12 days ago',
+      recentAppointments: {
+        lastMinuteCancellations: 2,
+        noShows: 0
+      },
+      painScoreTrend: 'stagnant',
+      recentPostSentiment: 'Anxious. Recent post: "Progress feels slow. Expected to be further along by now. Wondering if this is normal?"',
+      goalAchievementRate: '48%'
+    }
+  },
+  {
+    patientId: '8',
+    patientName: 'Nina Patel',
+    email: 'nina.patel@example.com',
+    injury: 'Meniscus Repair',
+    weeksInTherapy: 3,
+    data: {
+      hepComplianceLastWeek: '25%',
+      loginsLastWeek: 1,
+      lastCommunityPost: '18 days ago',
+      recentAppointments: {
+        lastMinuteCancellations: 1,
+        noShows: 1
+      },
+      painScoreTrend: 'worsening',
+      recentPostSentiment: 'Discouraged. Recent post: "Too busy with family responsibilities. Knee still hurts when I do the exercises."',
+      goalAchievementRate: '30%'
+    }
+  },
+  {
+    patientId: '9',
+    patientName: 'David Kim',
+    email: 'david.kim@example.com',
+    injury: 'Elbow Tendonitis',
+    weeksInTherapy: 7,
+    data: {
+      hepComplianceLastWeek: '40%',
+      loginsLastWeek: 2,
+      lastCommunityPost: '22 days ago',
+      recentAppointments: {
+        lastMinuteCancellations: 0,
+        noShows: 0
+      },
+      painScoreTrend: 'stagnant',
+      recentPostSentiment: 'Neutral but concerned. Recent post: "Elbow feels the same. Not worse but not better either. Getting bored with exercises."',
+      goalAchievementRate: '45%'
+    }
+  },
+  {
+    patientId: '10',
+    patientName: 'Rachel Green',
+    email: 'rachel.green@example.com',
+    injury: 'Lower Back Pain Management',
+    weeksInTherapy: 9,
+    data: {
+      hepComplianceLastWeek: '15%',
+      loginsLastWeek: 0,
+      lastCommunityPost: '40 days ago',
+      recentAppointments: {
+        lastMinuteCancellations: 3,
+        noShows: 1
+      },
+      painScoreTrend: 'worsening',
+      recentPostSentiment: 'Very frustrated. Recent post: "Nothing seems to help. Tried everything but back pain is still there. Feeling defeated."',
+      goalAchievementRate: '20%'
+    }
+  },
+  {
+    patientId: '11',
+    patientName: 'Thomas Anderson',
+    email: 'thomas.a@example.com',
+    injury: 'Wrist Fracture Recovery',
+    weeksInTherapy: 6,
+    data: {
+      hepComplianceLastWeek: '50%',
+      loginsLastWeek: 2,
+      lastCommunityPost: '10 days ago',
+      recentAppointments: {
+        lastMinuteCancellations: 1,
+        noShows: 0
+      },
+      painScoreTrend: 'stagnant',
+      recentPostSentiment: 'Mixed feelings. Recent post: "Wrist movement improving slightly but range of motion still limited. Getting impatient."',
+      goalAchievementRate: '52%'
+    }
+  },
+  {
+    patientId: '12',
+    patientName: 'Sophia Martinez',
+    email: 'sophia.m@example.com',
+    injury: 'Hamstring Strain Recovery',
+    weeksInTherapy: 2,
+    data: {
+      hepComplianceLastWeek: '35%',
+      loginsLastWeek: 1,
+      lastCommunityPost: '14 days ago',
+      recentAppointments: {
+        lastMinuteCancellations: 0,
+        noShows: 1
+      },
+      painScoreTrend: 'stagnant',
+      recentPostSentiment: 'Uncertain. Recent post: "New to this. Not sure if I am doing exercises correctly. Afraid of re-injury."',
+      goalAchievementRate: '38%'
+    }
   }
 ]
