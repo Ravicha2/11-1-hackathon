@@ -17,7 +17,7 @@ import {
   Video
 } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const iconMap = {
@@ -32,6 +32,7 @@ const iconMap = {
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
 
   const isAnyChildActive = (item: NavigationItem): boolean => {
     if (!item.children) return false
