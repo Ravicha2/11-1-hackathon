@@ -582,6 +582,11 @@ export const navigationItems: NavigationItem[] = [
     ]
   },
   {
+    name: 'Group Session',
+    href: '/dashboard/session',
+    icon: 'Video'
+  },
+  {
     name: 'Knowledge',
     href: '/dashboard/knowledge',
     icon: 'BookOpen'

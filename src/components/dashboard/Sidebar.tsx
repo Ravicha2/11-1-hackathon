@@ -13,7 +13,8 @@ import {
   MessageSquare,
   Settings,
   User,
-  Users
+  Users,
+  Video
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -24,6 +25,7 @@ const iconMap = {
   Users,
   MessageSquare,
   Compass,
+  Video,
   BookOpen,
   Calendar
 }
@@ -199,8 +201,16 @@ export default function Sidebar() {
           <button
             className="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
             onClick={() => {
-              // Add logout logic here
-              console.log('User logout')
+              // Show confirmation dialog
+              const confirmed = window.confirm('Are you sure you want to logout?')
+
+              if (confirmed) {
+                // Clear any stored auth data (if you have any)
+                // localStorage.removeItem('authToken') // Example
+
+                // Redirect to login page
+                router.push('/login')
+              }
             }}
           >
             <LogOut className="w-5 h-5 mr-3" />
