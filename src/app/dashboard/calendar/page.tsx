@@ -1,0 +1,308 @@
+'use client'
+
+import { addMonths, eachDayOfInterval, endOfMonth, format, isSameDay, isSameMonth, startOfMonth, subMonths } from 'date-fns'
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, MapPin, User } from 'lucide-react'
+import { useState } from 'react'
+
+// Mock calendar event data
+const calendarEvents = [
+  {
+    id: '1',
+    title: 'Physical Therapy',
+    date: new Date(2024, 10, 1, 14, 0), // 11月1日 14:00
+    duration: 60,
+    type: 'therapy',
+    location: 'Rehabilitation Center A',
+    therapist: 'Dr. Li'
+  },
+  {
+    id: '2',
+    title: 'Follow-up Appointment',
+    date: new Date(2024, 10, 5, 9, 30), // 11月5日 9:30
+    duration: 30,
+    type: 'checkup',
+    location: 'Orthopedic Clinic',
+    doctor: 'Dr. Wang'
+  },
+  {
+    id: '3',
+    title: 'Rehabilitation Training',
+    date: new Date(2024, 10, 8, 16, 0), // 11月8日 16:00
+    duration: 45,
+    type: 'exercise',
+    location: 'Training Room B',
+    trainer: 'Coach Zhang'
+  },
+  {
+    id: '4',
+    title: 'Nutrition Consultation',
+    date: new Date(2024, 10, 12, 10, 0), // 11月12日 10:00
+    duration: 30,
+    type: 'consultation',
+    location: 'Nutrition Department',
+    nutritionist: 'Nutritionist Chen'
+  },
+  {
+    id: '5',
+    title: 'Physical Therapy',
+    date: new Date(2024, 10, 15, 14, 0), // 11月15日 14:00
+    duration: 60,
+    type: 'therapy',
+    location: 'Rehabilitation Center A',
+    therapist: 'Dr. Li'
+  }
+]
+
+const eventTypeColors = {
+  therapy: 'bg-blue-100 text-blue-700 border-blue-200',
+  checkup: 'bg-green-100 text-green-700 border-green-200',
+  exercise: 'bg-purple-100 text-purple-700 border-purple-200',
+  consultation: 'bg-orange-100 text-orange-700 border-orange-200'
+}
+
+const eventTypeNames = {
+  therapy: 'Physical Therapy',
+  checkup: 'Follow-up',
+  exercise: 'Rehab Training',
+  consultation: 'Nutrition Consult'
+}
+
+export default function CalendarPage() {
+  const [currentDate, setCurrentDate] = useState(new Date())
+  const [selectedDate, setSelectedDate] = useState(new Date())
+
+  const monthStart = startOfMonth(currentDate)
+  const monthEnd = endOfMonth(currentDate)
+  const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd })
+
+  const goToPreviousMonth = () => {
+    setCurrentDate(subMonths(currentDate, 1))
+  }
+
+  const goToNextMonth = () => {
+    setCurrentDate(addMonths(currentDate, 1))
+  }
+
+  const getEventsForDate = (date: Date) => {
+    return calendarEvents.filter(event =>
+      isSameDay(event.date, date)
+    )
+  }
+
+  const selectedDateEvents = getEventsForDate(selectedDate)
+
+  return (
+    <div className="space-y-6">
+      {/* 页面标题 */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">My Recovery Calendar</h1>
+        <p className="text-gray-600">Manage your recovery plans and appointment schedules</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* 日历主体 */}
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            {/* 日历头部 */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-gray-900">
+                {format(currentDate, 'MMMM yyyy')}
+              </h2>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={goToPreviousMonth}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={goToNextMonth}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* 星期标题 */}
+            <div className="grid grid-cols-7 gap-1 mb-2">
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+                <div key={day} className="p-2 text-center text-sm font-medium text-gray-500">
+                  {day}
+                </div>
+              ))}
+            </div>
+
+            {/* 日历网格 */}
+            <div className="grid grid-cols-7 gap-1">
+              {monthDays.map((day) => {
+                const dayEvents = getEventsForDate(day)
+                const isSelected = isSameDay(day, selectedDate)
+                const isToday = isSameDay(day, new Date())
+
+                return (
+                  <button
+                    key={day.toISOString()}
+                    onClick={() => setSelectedDate(day)}
+                    className={`
+                      relative p-2 h-20 border border-gray-100 hover:bg-gray-50 transition-colors
+                      ${isSelected ? 'bg-blue-50 border-blue-200' : ''}
+                      ${isToday ? 'bg-yellow-50 border-yellow-200' : ''}
+                    `}
+                  >
+                    <div className={`
+                      text-sm font-medium mb-1
+                      ${!isSameMonth(day, currentDate) ? 'text-gray-300' : 'text-gray-900'}
+                      ${isToday ? 'text-yellow-700' : ''}
+                      ${isSelected ? 'text-blue-700' : ''}
+                    `}>
+                      {format(day, 'd')}
+                    </div>
+
+                    {dayEvents.length > 0 && (
+                      <div className="space-y-1">
+                        {dayEvents.slice(0, 2).map((event) => (
+                          <div
+                            key={event.id}
+                            className={`
+                              px-1 py-0.5 text-xs rounded truncate
+                              ${eventTypeColors[event.type as keyof typeof eventTypeColors]}
+                            `}
+                          >
+                            {event.title}
+                          </div>
+                        ))}
+                        {dayEvents.length > 2 && (
+                          <div className="text-xs text-gray-500">
+                            +{dayEvents.length - 2} more
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* 右侧详情面板 */}
+        <div className="space-y-6">
+          {/* 选中日期信息 */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center mb-4">
+              <CalendarIcon className="w-5 h-5 text-blue-600 mr-2" />
+              <h3 className="font-semibold text-gray-900">
+                {format(selectedDate, 'MMMM d, EEEE')}
+              </h3>
+            </div>
+
+            {selectedDateEvents.length > 0 ? (
+              <div className="space-y-3">
+                {selectedDateEvents.map((event) => (
+                  <div
+                    key={event.id}
+                    className={`
+                      p-3 rounded-lg border
+                      ${eventTypeColors[event.type as keyof typeof eventTypeColors]}
+                    `}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-medium">{event.title}</h4>
+                      <span className="text-xs px-2 py-1 bg-white rounded">
+                        {eventTypeNames[event.type as keyof typeof eventTypeNames]}
+                      </span>
+                    </div>
+
+                    <div className="space-y-1 text-sm">
+                      <div className="flex items-center">
+                        <Clock className="w-3 h-3 mr-2" />
+                        {format(event.date, 'HH:mm')} ({event.duration}分钟)
+                      </div>
+
+                      <div className="flex items-center">
+                        <MapPin className="w-3 h-3 mr-2" />
+                        {event.location}
+                      </div>
+
+                      {(event as any).therapist && (
+                        <div className="flex items-center">
+                          <User className="w-3 h-3 mr-2" />
+                          {(event as any).therapist}
+                        </div>
+                      )}
+
+                      {(event as any).doctor && (
+                        <div className="flex items-center">
+                          <User className="w-3 h-3 mr-2" />
+                          {(event as any).doctor}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                <p>No appointments scheduled</p>
+              </div>
+            )}
+          </div>
+
+          {/* 快速统计 */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="font-semibold text-gray-900 mb-4">Monthly Statistics</h3>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Total Appointments</span>
+                <span className="font-medium">{calendarEvents.length} times</span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Physical Therapy</span>
+                <span className="font-medium">
+                  {calendarEvents.filter(e => e.type === 'therapy').length} times
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Rehab Training</span>
+                <span className="font-medium">
+                  {calendarEvents.filter(e => e.type === 'exercise').length} times
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Follow-ups</span>
+                <span className="font-medium">
+                  {calendarEvents.filter(e => e.type === 'checkup').length} times
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* 快速操作 */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="font-semibold text-gray-900 mb-4">Quick Actions</h3>
+
+            <div className="space-y-2">
+              <button className="w-full px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors">
+                Book Physical Therapy
+              </button>
+
+              <button className="w-full px-4 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors">
+                Book Follow-up
+              </button>
+
+              <button className="w-full px-4 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors">
+                Schedule Training
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
