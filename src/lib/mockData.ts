@@ -164,7 +164,7 @@ export interface LoginResult {
 // 模拟登录验证
 export function authenticateUser(credentials: LoginCredentials): LoginResult {
   const { email, password } = credentials
-  
+
   // 管理员账号验证
   if (email === 'admin@healing-together.com' && password === 'admin123') {
     return {
@@ -173,7 +173,7 @@ export function authenticateUser(credentials: LoginCredentials): LoginResult {
       redirectTo: '/admin/patient-care'
     }
   }
-  
+
   // 普通用户账号验证（任何有效邮箱格式 + 6位以上密码）
   const emailRegex = /\S+@\S+\.\S+/
   if (emailRegex.test(email) && password.length >= 6) {
@@ -183,7 +183,7 @@ export function authenticateUser(credentials: LoginCredentials): LoginResult {
       redirectTo: '/dashboard'
     }
   }
-  
+
   return {
     success: false,
     error: 'Invalid email or password'
