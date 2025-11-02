@@ -54,7 +54,7 @@ export default function WeeklyProgressChart() {
             <Tooltip content={<CustomTooltip />} />
             <Bar
               dataKey="completed"
-              fill="#3b82f6"
+              fill="#8573bd"
               radius={[4, 4, 0, 0]}
               name="Completed"
             />
