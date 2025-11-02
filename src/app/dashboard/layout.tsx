@@ -1,6 +1,6 @@
 import Sidebar from '@/components/dashboard/Sidebar'
-import { PartyProvider } from '@/lib/PartyContext'
 import { CalendarProvider } from '@/lib/CalendarContext'
+import { PartyProvider } from '@/lib/PartyContext'
 import { Toaster } from 'react-hot-toast'
 
 export default function DashboardLayout({
@@ -17,7 +17,7 @@ export default function DashboardLayout({
 
           {/* 右侧主内容区域 */}
           <main className="flex-1 overflow-auto">
-            <div className="p-8">
+            <div className="px-8 pt-8 pb-6">
               {children}
             </div>
           </main>
