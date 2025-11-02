@@ -1,18 +1,27 @@
 'use client'
 
+<<<<<<< HEAD
 import { currentUser, exercisePlanItems } from '@/lib/mockData'
 import { useCalendar, CalendarEvent } from '@/lib/CalendarContext'
 import { cn } from '@/lib/utils'
 import { Calendar, Download, Dumbbell, Edit, FileText, User, RefreshCw, CheckCircle } from 'lucide-react'
+=======
+import { currentUser } from '@/lib/mockData'
+import { Calendar, Download, Dumbbell, Edit, Eye, EyeOff, FileText, Shield, User } from 'lucide-react'
+>>>>>>> d12278e (fix: profile page add privacy settings)
 import Link from 'next/link'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false)
+<<<<<<< HEAD
   const [isSyncing, setIsSyncing] = useState(false)
   const [syncSuccess, setSyncSuccess] = useState(false)
   const { addEvents, clearSyncedEvents } = useCalendar()
+=======
+  const [hideFromFriends, setHideFromFriends] = useState(false)
+>>>>>>> d12278e (fix: profile page add privacy settings)
 
   // Mock data for the profile
   const nextAppointment = {
@@ -37,6 +46,7 @@ export default function ProfilePage() {
     setIsEditing(!isEditing)
   }
 
+<<<<<<< HEAD
   const handleSynchronizePlan = () => {
     setIsSyncing(true)
     setSyncSuccess(false)
@@ -162,6 +172,15 @@ export default function ProfilePage() {
 
       setIsSyncing(false)
     }, 1000)
+=======
+  const handleTogglePrivacy = () => {
+    setHideFromFriends(!hideFromFriends)
+    // Show confirmation message
+    const message = !hideFromFriends
+      ? '✓ Your profile is now hidden from friends'
+      : '✓ Your profile is now visible to friends'
+    alert(message)
+>>>>>>> d12278e (fix: profile page add privacy settings)
   }
 
   return (
@@ -396,6 +415,65 @@ export default function ProfilePage() {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div className="bg-[#8573bd] h-2 rounded-full" style={{ width: '85%' }}></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Privacy Settings Card */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 md:col-span-2">
+            <div className="flex items-center mb-4">
+              <Shield className="w-5 h-5 text-[#8573bd] mr-2" />
+              <h2 className="text-lg font-semibold text-[#0F1620]">Privacy Settings</h2>
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-[#5B626D] text-sm">
+                Control who can see your profile information
+              </p>
+
+              {/* Privacy Toggle */}
+              <div className="border border-gray-200 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center">
+                    {hideFromFriends ? (
+                      <EyeOff className="w-5 h-5 text-[#8573bd] mr-3" />
+                    ) : (
+                      <Eye className="w-5 h-5 text-[#8573bd] mr-3" />
+                    )}
+                    <div>
+                      <h3 className="font-medium text-[#0F1620]">Hide medical record from Friends</h3>
+                      <p className="text-xs text-[#5B626D] mt-1">
+                        {hideFromFriends
+                          ? 'Your profile is currently hidden'
+                          : 'Your profile is currently visible'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Toggle Switch */}
+                  <button
+                    onClick={handleTogglePrivacy}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${hideFromFriends ? 'bg-[#8573bd]' : 'bg-gray-300'
+                      }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${hideFromFriends ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                    />
+                  </button>
+                </div>
+
+                <div className="text-xs text-[#5B626D] bg-[#EAE6F5] rounded p-3">
+                  {hideFromFriends ? (
+                    <>
+                      <strong className="text-[#8573bd]">Private Mode Active:</strong> Other users cannot view your medical records, progress, or activity status.
+                    </>
+                  ) : (
+                    <>
+                      <strong className="text-[#8573bd]">Public Mode:</strong> Friends can see your recovery progress and support your journey.
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
